@@ -1,0 +1,1 @@
+Sway environment configurations.
