@@ -62,7 +62,7 @@ exec /usr/lib/polkit-1/polkit-agent-helper-1
 exec /usr/lib/geoclue2-1-pantheon/pantheon-agent-geoclue2
 
 # notification
-exec mako
+exec swaync
 
 # Clipboard manager
 exec wl-paste --watch cliphist store
@@ -182,6 +182,10 @@ bindsym $mod+Shift+q kill
 # Start your launcher
 bindsym $mod+d exec $menu
 
+# Toggle notifications window
+bindsym $mod+n exec swaync-client -t
+bindsym $mod+Shift+n exec swaync-client -C
+
 # Drag floating windows by holding down $mod and left mouse button.
 # Resize them with right mouse button + $mod.
 # Despite the name, also works for non-floating windows.
@@ -279,6 +283,9 @@ bindsym $mod+space focus mode_toggle
 # Move focus to the parent container
 bindsym $mod+a focus parent
 
+# Make floating winow sticky
+bindsym $mod+Shift+S sticky toggle
+
 #
 # Scratchpad:
 #
@@ -316,17 +323,38 @@ mode "resize" {
 }
 bindsym $mod+r mode "resize"
 
+set $cpu_throttle CPU Throttle:  + increase, - decrease
+mode "$cpu_throttle" {
+
+    # Return to default mode
+    bindsym Return mode "default"
+    bindsym Escape mode "default"
+}
+bindsym $mod+t mode "$cpu_throttle"
+
 #
 # Status Bar:
 #
 # Read `man 5 sway-bar` for more information about this section.
 bar {
     position top
+    workspace_buttons no
 
     # When the status_command prints a new line to stdout, swaybar updates.
     # The default just shows the current date and time.
     #status_command while date +'%Y-%m-%d %I:%M:%S %p'k do sleep 1; done
     status_command while ~/.config/swaybar/run-modules.sh; do sleep 1; done
+    colors {
+        statusline #ffffff
+        background #323232
+        inactive_workspace #32323200 #32323200 #5c5c5c
+    }
+}
+
+bar {
+    position bottom
+    tray_output none
+
     colors {
         statusline #ffffff
         background #323232
