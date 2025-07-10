@@ -362,4 +362,55 @@ bar {
     }
 }
 
+set {
+    # Pop-up window config
+    $maximize border none, move position center, resize set width 80 ppt heaight 80 ppt
+
+    # Pop-up Terminal
+    $popup_term_id popup_terminal
+    $popup_term_cmd alacritty --class $popup_term_id
+
+    # Pop-up File Manager 
+    $popup_fm_id popup_file_manager
+    $popup_fm_cmd alacritty --class $popup_fm_id -e "yazi"
+
+    # Pop-up Editor
+    $popup_editor_id popup_editor
+    $popup_editor_cmd alacritty --class $popup_editor_id -e "nvim"
+
+    # Pop-up Bluetooth Manager
+    $popup_bluetooth_id popup_bluetooth
+    $popup_bluetooth_cmd alacritty --class $popup_bluetooth_id -e "bluetui"
+}
+
+for_window {
+    # Pop-up Terminal
+    [app_id=$popup_term_id] move to scratchpad, scratchpad show
+    [app_id=$popup_term_id] $maximize
+
+    # Pop-up File Manager 
+    [app_id=$popup_fm_id] move to scratchpad, scratchpad show
+    [app_id=$popup_fm_id] $maximize
+
+    # Pop-up Editor
+    [app_id=$popup_editor_id] move to scratchpad, scratchpad show
+    [app_id=$popup_editor_id] $maximize
+
+    # Pop-up Bluetooth Manager
+    [app_id=$popup_bluetooth_id] move to scratchpad, scratchpad show
+    [app_id=$popup_bluetooth_id] $maximize
+}
+
+bindsym --to-code {
+    # Pop-up Terminal
+    $mod+grave exec swaymsg [app_id=$popup_term_id] scratchpad show || exec $popup_term_cmd, $maximize
+
+    # Applications
+    $mod+Shift+b exec swaymsg [app_id=$popup_bluetooth_id] scratchpad show || exec $popup_bluetooth_cmd, $maximize
+    $mod+Shift+e exec swaymsg [app_id=$popup_editor_id] scratchpad show || exec $popup_editor_cmd, $maximize
+    $mod+Shift+f exec swaymsg [app_id=$popup_fm_id] scratchpad show || exec $popup_fm_cmd, $maximize
+}
+
+
+
 include /etc/sway/config.d/*
